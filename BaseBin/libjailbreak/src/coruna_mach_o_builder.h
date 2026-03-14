@@ -9,6 +9,7 @@
 #define coruna_mach_o_builder_h
 
 #include <stdint.h>
+#include <stdlib.h>
 
 // Coruna Mach-O载荷构建器函数声明
 int coruna_build_mach_o_payload(uint8_t **payload, size_t *payload_size);

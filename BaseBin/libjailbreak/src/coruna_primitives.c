@@ -7,7 +7,7 @@
 
 #include "coruna_primitives.h"
 #include "primitives.h"
-#include <libjailbreak/primitives.h>
+#include "libjailbreak/primitives.h"
 
 // Coruna内核读写原语实现
 int coruna_kread64(uint64_t kaddr, uint64_t *out)
