@@ -41,7 +41,7 @@ jobs:
             submodules: recursive
 
       - name: Install Procursus
-        uses: dhinakg/procursus-action@main
+        uses: beerpiss/procursus-action@v2
         with:
           packages: ldid findutils sed coreutils make
 
