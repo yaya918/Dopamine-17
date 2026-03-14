@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "primitives_external.h"
-#include "coruna_primitives.h"
 
 #define BIT(b)    (1ULL << (b))
 #define ONES(x)          (BIT((x))-1)

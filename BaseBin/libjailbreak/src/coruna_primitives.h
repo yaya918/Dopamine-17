@@ -8,7 +8,7 @@
 #ifndef coruna_primitives_h
 #define coruna_primitives_h
 
-#include "primitives.h"
+#include <stdint.h>
 
 // Coruna内核读写原语函数声明
 int coruna_kread64(uint64_t kaddr, uint64_t *out);
