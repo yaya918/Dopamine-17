@@ -626,14 +626,25 @@ int reboot3(uint64_t flags, ...);
     //if (cpuFamily == CPUFAMILY_ARM_TYPHOON) return false; // A8X is unsupported for now (due to 4k page size)
     
     DOExploitManager *exploitManager = [DOExploitManager sharedManager];
-    if ([exploitManager availableExploitsForType:EXPLOIT_TYPE_KERNEL].count) {
-        if (![self isPACBypassRequired] || [exploitManager availableExploitsForType:EXPLOIT_TYPE_PAC].count) {
-            if (![self isPPLBypassRequired] || [exploitManager availableExploitsForType:EXPLOIT_TYPE_PPL].count) {
+    NSSet *kernelExploits = [exploitManager availableExploitsForType:EXPLOIT_TYPE_KERNEL];
+    NSSet *pacExploits = [exploitManager availableExploitsForType:EXPLOIT_TYPE_PAC];
+    NSSet *pplExploits = [exploitManager availableExploitsForType:EXPLOIT_TYPE_PPL];
+    
+    NSLog(@"Checking support - Kernel exploits: %lu, PAC exploits: %lu, PPL exploits: %lu", 
+          (unsigned long)kernelExploits.count, (unsigned long)pacExploits.count, (unsigned long)pplExploits.count);
+    
+    if (kernelExploits.count > 0) {
+        NSLog(@"Kernel exploits available, checking PAC bypass requirement: %@", [self isPACBypassRequired] ? @"YES" : @"NO");
+        if (![self isPACBypassRequired] || pacExploits.count > 0) {
+            NSLog(@"PAC requirement satisfied, checking PPL bypass requirement: %@", [self isPPLBypassRequired] ? @"YES" : @"NO");
+            if (![self isPPLBypassRequired] || pplExploits.count > 0) {
+                NSLog(@"All requirements satisfied - Device is supported");
                 return true;
             }
         }
     }
     
+    NSLog(@"Device is not supported");
     return false;
 }
 
