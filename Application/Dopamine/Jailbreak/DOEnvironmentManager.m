@@ -620,6 +620,20 @@ int reboot3(uint64_t flags, ...);
 
 - (BOOL)isSupported
 {
+    NSLog(@"=== 开始检查Dopamine2支持状态 ===");
+    
+    // 检查是否已安装通过TrollStore
+    BOOL isInstalledViaTrollStore = [self isInstalledThroughTrollStore];
+    NSLog(@"TrollStore安装检查: %@", isInstalledViaTrollStore ? @"通过" : @"未通过");
+    
+    // 检查是否已越狱
+    BOOL isJailbroken = [self isJailbroken];
+    NSLog(@"越狱状态检查: %@", isJailbroken ? @"已越狱" : @"未越狱");
+    
+    // 检查是否为roothide越狱
+    BOOL isRoothideJailbroken = jbclient_roothide_jailbroken();
+    NSLog(@"roothide越狱检查: %@", isRoothideJailbroken ? @"已roothide越狱" : @"未roothide越狱");
+    
     //cpu_subtype_t cpuFamily = 0;
     //size_t cpuFamilySize = sizeof(cpuFamily);
     //sysctlbyname("hw.cpufamily", &cpuFamily, &cpuFamilySize, NULL, 0);
@@ -630,21 +644,31 @@ int reboot3(uint64_t flags, ...);
     NSSet *pacExploits = [exploitManager availableExploitsForType:EXPLOIT_TYPE_PAC];
     NSSet *pplExploits = [exploitManager availableExploitsForType:EXPLOIT_TYPE_PPL];
     
-    NSLog(@"Checking support - Kernel exploits: %lu, PAC exploits: %lu, PPL exploits: %lu", 
+    NSLog(@"支持的exploit - Kernel: %lu, PAC: %lu, PPL: %lu", 
           (unsigned long)kernelExploits.count, (unsigned long)pacExploits.count, (unsigned long)pplExploits.count);
     
     if (kernelExploits.count > 0) {
-        NSLog(@"Kernel exploits available, checking PAC bypass requirement: %@", [self isPACBypassRequired] ? @"YES" : @"NO");
+        NSLog(@"✅ Kernel exploits可用");
+        NSLog(@"检查PAC bypass需求: %@", [self isPACBypassRequired] ? @"需要" : @"不需要");
         if (![self isPACBypassRequired] || pacExploits.count > 0) {
-            NSLog(@"PAC requirement satisfied, checking PPL bypass requirement: %@", [self isPPLBypassRequired] ? @"YES" : @"NO");
+            NSLog(@"✅ PAC需求满足");
+            NSLog(@"检查PPL bypass需求: %@", [self isPPLBypassRequired] ? @"需要" : @"不需要");
             if (![self isPPLBypassRequired] || pplExploits.count > 0) {
-                NSLog(@"All requirements satisfied - Device is supported");
+                NSLog(@"✅ 所有需求满足 - 设备支持");
+                NSLog(@"=== Dopamine2支持检查: 通过 ===");
                 return true;
+            } else {
+                NSLog(@"❌ PPL需求不满足");
             }
+        } else {
+            NSLog(@"❌ PAC需求不满足");
         }
+    } else {
+        NSLog(@"❌ 无可用Kernel exploits");
     }
     
-    NSLog(@"Device is not supported");
+    NSLog(@"❌ 设备不支持");
+    NSLog(@"=== Dopamine2支持检查: 失败 ===");
     return false;
 }
 
