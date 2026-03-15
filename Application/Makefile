@@ -12,8 +12,6 @@ Dopamine.ipa: build/Build/Products/Debug-iphoneos/Dopamine.app
 	cp -r build/Build/Products/Debug-iphoneos/Dopamine.app Payload/Dopamine.app
 	zip -Ar Dopamine.ipa Payload
 	rm -rf Payload
-	rm -rf Dopamine.tipa
-	cp Dopamine.ipa Dopamine.tipa
 
 ifeq ($(NIGHTLY), 1)
 build/Build/Products/Debug-iphoneos/Dopamine.app: FORCE
@@ -32,7 +30,7 @@ endif
 
 clean:
 	make -C Dopamine/Exploits/palera1n clean
-	rm -rf build Payload Dopamine.ipa Dopamine.tipa
+	rm -rf build Payload Dopamine.ipa
 
 build_clean:
 	rm -rf Payload build
